@@ -4,6 +4,7 @@ use std::{
     io,
     env,
 };
+
 use std::fs::DirEntry;
 
 use crate::RustyError::IOError;
@@ -19,7 +20,9 @@ fn list(read_dir: ReadDir, prefix: String) -> Result {
     for entry in read_dir.filter(|e| !is_hidden(e)) {
         let entry = entry?;
         let file_type = entry.file_type()?;
-        println!("{} * {:?}", prefix, entry.file_name());
+        let file_name = entry.file_name();
+        let file_name = file_name.to_str().unwrap_or("Unknown");
+        println!("{} * {}", prefix, file_name);
         if file_type.is_dir() {
             list(entry.path().read_dir()?, format!("{}  ", prefix))?;
         }
