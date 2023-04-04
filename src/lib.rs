@@ -11,17 +11,17 @@ use crate::RustyError::IOError;
 pub fn run() -> Result {
     let current_path = env::current_dir()?;
     let read_dir = current_path.read_dir()?;
-    list(read_dir)?;
+    list(read_dir, String::new())?;
     Ok(())
 }
 
-fn list(read_dir: ReadDir) -> Result {
+fn list(read_dir: ReadDir, prefix: String) -> Result {
     for entry in read_dir.filter(|e| !is_hidden(e)) {
         let entry = entry?;
         let file_type = entry.file_type()?;
-        println!("* {:?}", entry.file_name());
+        println!("{} * {:?}", prefix, entry.file_name());
         if file_type.is_dir() {
-            list(entry.path().read_dir()?)?;
+            list(entry.path().read_dir()?, format!("{}  ", prefix))?;
         }
     }
     Ok(())
