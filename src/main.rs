@@ -1,3 +1,9 @@
+use std::process;
+use rusty_tree::{run};
+
 fn main() {
-    println!("Rusty tree");
+    if let Err(e) = run() {
+        eprintln!("Error: {e}");
+        process::exit(1)
+    }
 }
