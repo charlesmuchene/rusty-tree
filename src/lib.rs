@@ -2,8 +2,9 @@ use std::{
     fmt::{self, Formatter},
     fs::{ReadDir},
     io,
-    env
+    env,
 };
+use std::fs::DirEntry;
 
 use crate::RustyError::IOError;
 
@@ -15,7 +16,7 @@ pub fn run() -> Result {
 }
 
 fn list(read_dir: ReadDir) -> Result {
-    for entry in read_dir {
+    for entry in read_dir.filter(|e| !is_hidden(e)) {
         let entry = entry?;
         let file_type = entry.file_type()?;
         println!("* {:?}", entry.file_name());
@@ -24,6 +25,17 @@ fn list(read_dir: ReadDir) -> Result {
         }
     }
     Ok(())
+}
+
+fn is_hidden(entry: &std::result::Result<DirEntry, io::Error>) -> bool {
+    if let Ok(entry) = entry {
+        entry.file_name()
+            .to_str()
+            .map(|s| s.starts_with('.'))
+            .unwrap_or(false)
+    } else {
+        false
+    }
 }
 
 type Result<T = ()> = std::result::Result<T, RustyError>;
