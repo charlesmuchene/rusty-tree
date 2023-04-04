@@ -12,6 +12,7 @@ use crate::RustyError::IOError;
 pub fn run() -> Result {
     let current_path = env::current_dir()?;
     let read_dir = current_path.read_dir()?;
+    println!(".");
     list(read_dir, String::new())?;
     Ok(())
 }
@@ -22,9 +23,9 @@ fn list(read_dir: ReadDir, prefix: String) -> Result {
         let file_type = entry.file_type()?;
         let file_name = entry.file_name();
         let file_name = file_name.to_str().unwrap_or("Unknown");
-        println!("{} * {}", prefix, file_name);
+        println!("{}├── {}", prefix, file_name); // last: └──
         if file_type.is_dir() {
-            list(entry.path().read_dir()?, format!("{}  ", prefix))?;
+            list(entry.path().read_dir()?, format!("│  {}", prefix))?;
         }
     }
     Ok(())
