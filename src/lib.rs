@@ -1,11 +1,9 @@
 use std::{
     fmt::{self, Formatter},
-    fs::{ReadDir},
+    fs::{ReadDir, DirEntry},
     io,
     env,
 };
-
-use std::fs::DirEntry;
 
 use crate::RustyError::IOError;
 
@@ -18,14 +16,25 @@ pub fn run() -> Result {
 }
 
 fn list(read_dir: ReadDir, prefix: String) -> Result {
-    for entry in read_dir.filter(|e| !is_hidden(e)) {
+    let mut peekable = read_dir
+        .filter(|entry| !is_hidden(entry))
+        .peekable();
+
+    while let Some(entry) = peekable.next() {
         let entry = entry?;
         let file_type = entry.file_type()?;
         let file_name = entry.file_name();
         let file_name = file_name.to_str().unwrap_or("Unknown");
-        println!("{}├── {}", prefix, file_name); // last: └──
+
+        let (separator, symbol) = match peekable.peek() {
+            Some(_) => ("│  ", "├──"),
+            None => ("  ", "└──")
+        };
+
+        println!("{}{} {}", prefix, symbol, file_name);
+
         if file_type.is_dir() {
-            list(entry.path().read_dir()?, format!("│  {}", prefix))?;
+            list(entry.path().read_dir()?, format!("{}{}", prefix, separator))?;
         }
     }
     Ok(())
