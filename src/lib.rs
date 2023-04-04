@@ -2,16 +2,14 @@ use std::{
     fmt::{self, Formatter},
     fs::{ReadDir},
     io,
-    path::PathBuf,
+    env
 };
 
 use crate::RustyError::IOError;
 
-const ROOT_PATH: &str = ".";
-
 pub fn run() -> Result {
-    let root_path = PathBuf::from(ROOT_PATH);
-    let read_dir = root_path.read_dir()?;
+    let current_path = env::current_dir()?;
+    let read_dir = current_path.read_dir()?;
     list(read_dir)?;
     Ok(())
 }
