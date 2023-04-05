@@ -1,12 +1,13 @@
 use std::{
     env,
-    fmt::{self, Formatter},
     fs::{DirEntry, ReadDir},
     io,
-    iter::Peekable
+    iter::Peekable,
 };
 
-use crate::RustyError::IOError;
+use error::RustyError;
+
+mod error;
 
 /// Part of a filename prefix to denote an item in the listing.
 ///
@@ -104,22 +105,3 @@ struct FilenameSymbol {
     separator: &'static str,
 }
 
-/// Custom error for the program
-pub enum RustyError {
-    /// Wrapper around an `io::Error`
-    IOError(io::Error),
-}
-
-impl fmt::Display for RustyError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            IOError(e) => f.write_fmt(format_args!("{e}")),
-        }
-    }
-}
-
-impl From<io::Error> for RustyError {
-    fn from(value: io::Error) -> Self {
-        IOError(value)
-    }
-}
