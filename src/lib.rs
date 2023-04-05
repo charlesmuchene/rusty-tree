@@ -8,6 +8,7 @@ use std::{
 use error::RustyError;
 
 mod error;
+mod test;
 
 /// Part of a filename prefix to denote an item in the listing.
 ///
@@ -66,7 +67,7 @@ fn get_filename(entry: &DirEntry) -> String {
     entry.file_name().to_str().unwrap_or("Unknown").to_string()
 }
 
-/// Determine the separator and symbol to use for printing filename based on the status of the
+/// Determine the separator and symbol to use for printing filename based on the position of the
 /// given `Peekable`.
 fn filename_symbol<T: Iterator>(peekable: &mut Peekable<T>) -> FilenameSymbol {
     match peekable.peek() {
@@ -104,4 +105,3 @@ struct FilenameSymbol {
     symbol: &'static str,
     separator: &'static str,
 }
-
