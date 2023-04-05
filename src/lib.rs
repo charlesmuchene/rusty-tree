@@ -28,7 +28,7 @@ const CURRENT_DIR: &str = ".";
 pub fn run() -> Result {
     let current_path = env::current_dir()?;
     let read_dir = current_path.read_dir()?;
-    println!("{}", CURRENT_DIR);
+    printer(String::from(CURRENT_DIR));
     list(read_dir, String::new())?;
     Ok(())
 }
@@ -47,7 +47,7 @@ fn list(read_dir: ReadDir, prefix: String) -> Result {
         let file_name = get_filename(&entry);
         let symbol = filename_symbol(&mut peekable);
 
-        println!("{}{}{}", prefix, symbol.symbol, file_name);
+        printer(format!("{}{}{}", prefix, symbol.symbol, file_name));
 
         if file_type.is_dir() {
             let read_dir = entry.path().read_dir()?;
@@ -86,6 +86,11 @@ fn is_hidden(entry: &std::result::Result<DirEntry, io::Error>) -> bool {
     } else {
         false
     }
+}
+
+/// Print the given string
+fn printer(text: String) {
+    println!("{}", text)
 }
 
 // FIXME Shouldn't shadow `std::result::Result`
