@@ -28,9 +28,9 @@ const CURRENT_DIR: &str = ".";
 ///
 /// Returns a `Result` which is an alias for `std::result::Result<(), RustyError>`
 pub fn run() -> Result {
-    let current_path = env::current_dir()?;
-    let read_dir = current_path.read_dir()?;
     printer(String::from(CURRENT_DIR));
+
+    let read_dir = env::current_dir()?.read_dir()?;
     list(read_dir, String::new())?;
     Ok(())
 }
