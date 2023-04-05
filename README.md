@@ -2,9 +2,9 @@
 A directory listing program.
 
 ## Usage
-$ rusty-tree
 
 ```
+$ rusty-tree
 .
 ├── first-file.txt
 ├── next-file.png
@@ -16,6 +16,5 @@ $ rusty-tree
 ```
 
 ### Notes
-The tool:
 * Skips hidden files and directories
 * Doesn't follow symlinks
